@@ -106,7 +106,7 @@
 
     // Call the function to populate the division dropdown initially
     window.onload = async function () {
-        var divisionData = await fetchData('https://needyamin.github.io/Bangladesh-Map/bangladesh-geocode-update-master/division.json');
+        var divisionData = await fetchData('https://needyamin.github.io/Bangladesh-Map/division.json');
         console.log('Division Data:', divisionData);
         populateDropdown(document.getElementById("divisionDropdown"), divisionData, "Division Code", "Division");
     };
