@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Dropdowns</title>
+</head>
+<body>
+
+<label for="divisionDropdown">Select Division:</label>
+<select id="divisionDropdown">
+    <option value="">-- Select Division --</option>
+</select>
+
+<label for="districtDropdown">Select District:</label>
+<select id="districtDropdown">
+    <option value="">-- Select District --</option>
+</select>
+
+<label for="upazilaDropdown">Select Upazila:</label>
+<select id="upazilaDropdown">
+    <option value="">-- Select Upazila --</option>
+</select>
+
+<label for="unionDropdown">Select Union:</label>
+<select id="unionDropdown">
+    <option value="">-- Select Union --</option>
+</select>
+
+<script>
+    // Function to fetch JSON data asynchronously
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            return null;
+        }
+    }
+
+    // Function to populate the dropdown
+    function populateDropdown(dropdown, dataArray, valueKey, textKey) {
+        dropdown.innerHTML = "<option value=''>-- Select " + textKey + " --</option>";
+
+        if (dataArray && Array.isArray(dataArray)) {
+            console.log('Received Data:', dataArray);
+            dataArray.forEach(function (item) {
+                var option = document.createElement("option");
+                option.value = item[valueKey];
+                option.text = item[textKey];
+                dropdown.appendChild(option);
+            });
+        } else {
+            console.error('Invalid data:', dataArray);
+        }
+    }
+
+    // Event listener for division dropdown
+    document.getElementById("divisionDropdown").addEventListener("change", async function () {
+        var selectedDivision = this.value;
+        var districtData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/district.json');
+        console.log('District Data:', districtData);
+
+        // Filter districts based on selected division
+        var filteredDistricts = districtData.filter(function (item) {
+            return item["Division Code"] === selectedDivision;
+        });
+
+        populateDropdown(document.getElementById("districtDropdown"), filteredDistricts, "District code", "District");
+        // Clear Upazila, Union dropdowns when Division changes
+        document.getElementById("upazilaDropdown").innerHTML = "<option value=''>-- Select Upazila --</option>";
+        document.getElementById("unionDropdown").innerHTML = "<option value=''>-- Select Union --</option>";
+    });
+
+    // Event listener for district dropdown
+    document.getElementById("districtDropdown").addEventListener("change", async function () {
+        var selectedDistrict = this.value;
+        var upazilaData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/upazila.json');
+        console.log('Upazila Data:', upazilaData);
+
+        // Filter upazilas based on selected district
+        var filteredUpazilas = upazilaData.filter(function (item) {
+            return item["District code"] === selectedDistrict;
+        });
+
+        populateDropdown(document.getElementById("upazilaDropdown"), filteredUpazilas, "Upazilla Code", "Upazilla");
+        // Clear Union dropdown when District changes
+        document.getElementById("unionDropdown").innerHTML = "<option value=''>-- Select Union --</option>";
+    });
+
+    // Event listener for upazila dropdown
+    document.getElementById("upazilaDropdown").addEventListener("change", async function () {
+        var selectedUpazila = this.value;
+        var unionData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/union-word.json');
+        console.log('Union Data:', unionData);
+
+        // Filter unions based on selected Upazila
+        var filteredUnions = unionData.filter(function (item) {
+            return item["Upazilla Code"] === selectedUpazila;
+        });
+
+        populateDropdown(document.getElementById("unionDropdown"), filteredUnions, "Union Code", "Union-Word");
+    });
+
+    // Call the function to populate the division dropdown initially
+    window.onload = async function () {
+        var divisionData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/division.json');
+        console.log('Division Data:', divisionData);
+        populateDropdown(document.getElementById("divisionDropdown"), divisionData, "Division Code", "Division");
+    };
+
+</script>
+
+</body>
+</html>
