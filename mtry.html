@@ -60,7 +60,7 @@
     // Event listener for division dropdown
     document.getElementById("divisionDropdown").addEventListener("change", async function () {
         var selectedDivision = this.value;
-        var districtData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/district.json');
+        var districtData = await fetchData('https://needyamin.github.io/Bangladesh-Map/district.json');
         console.log('District Data:', districtData);
 
         // Filter districts based on selected division
@@ -77,7 +77,7 @@
     // Event listener for district dropdown
     document.getElementById("districtDropdown").addEventListener("change", async function () {
         var selectedDistrict = this.value;
-        var upazilaData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/upazila.json');
+        var upazilaData = await fetchData('https://needyamin.github.io/Bangladesh-Map/upazila.json');
         console.log('Upazila Data:', upazilaData);
 
         // Filter upazilas based on selected district
@@ -93,7 +93,7 @@
     // Event listener for upazila dropdown
     document.getElementById("upazilaDropdown").addEventListener("change", async function () {
         var selectedUpazila = this.value;
-        var unionData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/union-word.json');
+        var unionData = await fetchData('https://needyamin.github.io/Bangladesh-Map/union-word.json');
         console.log('Union Data:', unionData);
 
         // Filter unions based on selected Upazila
@@ -106,7 +106,7 @@
 
     // Call the function to populate the division dropdown initially
     window.onload = async function () {
-        var divisionData = await fetchData('http://127.0.0.1/bangladesh-geocode-update-master/division.json');
+        var divisionData = await fetchData('https://needyamin.github.io/Bangladesh-Map/bangladesh-geocode-update-master/division.json');
         console.log('Division Data:', divisionData);
         populateDropdown(document.getElementById("divisionDropdown"), divisionData, "Division Code", "Division");
     };
